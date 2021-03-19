@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  daprbackend:
+    # image: ${DOCKER_REGISTRY-}daprbackend
+    build:
+      context: ./cal_service
+      dockerfile: ./Dockerfile
+    ports:
+      - 5100:5500
+
+  daprbackend-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "daprbackend", "-app-port", "3502" ]
+    depends_on:
+      - daprbackend
+    ports:
+      - 3522:3502  
+    network_mode: "service:daprbackend"
