@@ -13,3 +13,7 @@ curl -w "\n" -s 'http://localhost:3502/v1.0/invoke/multiplyapp/method/multiply' 
 dapr run --app-id webapp --app-port 3000 --dapr-http-port 3503  npm run dev
 dapr stop --app-id webapp
 ```
+# Reference
+- integrate docker compose 
+    - https://docs.microsoft.com/zh-tw/dotnet/architecture/dapr-for-net-developers/getting-started
+    
