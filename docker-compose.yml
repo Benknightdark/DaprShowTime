@@ -1,5 +1,28 @@
-version: '3'
+version: '3.4'
 services:
+  ############################
+  # node app + Dapr sidecar
+  ############################
+  nodeapp:
+    build: ./website
+    depends_on:
+      - redis
+      - placement
+    ports:
+      - "3333:3000"  
+    networks:
+      - show-time     
+  nodeapp-dapr:
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+    "-app-id", "nodeapp",
+    "-placement-host-address", "placement:50006",
+     "-components-path", "/components"]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      - nodeapp
+    network_mode: "service:nodeapp"
   ############################
   # Python app + Dapr sidecar
   ############################
@@ -9,15 +32,11 @@ services:
       - redis
       - placement
     networks:
-      - hello-dapr
-    # ports: 
-    #   - "5100:5100"      
+      - show-time     
   pythonapp-dapr:
-
     image: "daprio/daprd:edge"
     command: ["./daprd",
     "-app-id", "pythonapp",
-    # "--dapr-http-port","5100",
     "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
@@ -34,7 +53,7 @@ services:
     ports:
       - "50006:50006"
     networks:
-      - hello-dapr
+      - show-time
   ############################
   # Redis state store
   ############################
@@ -43,6 +62,6 @@ services:
     ports:
       - "6380:6379"
     networks:
-      - hello-dapr
+      - show-time
 networks:
-    hello-dapr:
+    show-time:
