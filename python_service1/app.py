@@ -18,7 +18,7 @@ def multiply():
 
 @app.route('/hi', methods=['GET'])
 def hi():
-    return "hi"
+    return "hi1"
 
 
 if __name__ == "__main__":
