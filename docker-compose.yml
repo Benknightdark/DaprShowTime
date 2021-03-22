@@ -1,19 +1,48 @@
-version: '3.4'
-
+version: '3'
 services:
-  daprbackend:
-    # image: ${DOCKER_REGISTRY-}daprbackend
-    build:
-      context: ./cal_service
-      dockerfile: ./Dockerfile
-    ports:
-      - 5100:5500
-
-  daprbackend-dapr:
-    image: "daprio/daprd:latest"
-    command: [ "./daprd", "-app-id", "daprbackend", "-app-port", "3502" ]
+  ############################
+  # Python app + Dapr sidecar
+  ############################
+  pythonapp:
+    build: ./cal_service
     depends_on:
-      - daprbackend
+      - redis
+      - placement
+    networks:
+      - hello-dapr
+    # ports: 
+    #   - "5100:5100"      
+  pythonapp-dapr:
+
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+    "-app-id", "pythonapp",
+    # "--dapr-http-port","5100",
+    "-placement-host-address", "placement:50006",
+     "-components-path", "/components"]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      - pythonapp
+    network_mode: "service:pythonapp"
+  ############################
+  # Dapr placement service
+  ############################
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
     ports:
-      - 3522:3502  
-    network_mode: "service:daprbackend"
+      - "50006:50006"
+    networks:
+      - hello-dapr
+  ############################
+  # Redis state store
+  ############################
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6380:6379"
+    networks:
+      - hello-dapr
+networks:
+    hello-dapr:
