@@ -1,6 +1,6 @@
 # dapr show time
 ``` Bash
-# Usage
+# docker compose Usage
 docker compose up 
 
 curl http://localhost:3333/api/python-service1
