@@ -35,6 +35,16 @@ kubectl delete -f ./deploy/python_service2.yaml
 kubectl apply -f ./deploy/python_service1.yaml
 kubectl apply -f ./deploy/python_service2.yaml
 
+
+
+# add/update the helm repo
+helm repo add dapr https://dapr.github.io/helm-charts/
+helm repo update
+# See which chart versions are available
+helm search repo dapr --devel --versions
+# install dapr using helm
+helm install  dapr dapr/dapr --version=1.0.1  --namespace dapr-system  --create-namespace  --values values.yml  --wait
+
 ```
 # Reference
 - integrate docker compose 
