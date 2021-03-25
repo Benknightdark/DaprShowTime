@@ -49,4 +49,5 @@ helm install  dapr dapr/dapr --version=1.0.1  --namespace dapr-system  --create-
 # Reference
 - integrate docker compose 
     - https://docs.microsoft.com/zh-tw/dotnet/architecture/dapr-for-net-developers/getting-started
+    - https://github.com/Benknightdark/you-get/tree/develop/src/you_get
     
